@@ -9,7 +9,7 @@ app = func.Blueprint()
 @app.timer_trigger(schedule="0 0 6 * * *", arg_name="timer", run_on_startup=False)
 def extract_estoque_movimentacao(timer: func.TimerRequest) -> None:
 
-       sql_server = os.getenv("SQL_SERVER_SOURCE")
+    sql_server = os.getenv("SQL_SERVER_SOURCE")
     sql_database = os.getenv("SQL_DATABASE_SOURCE")
     sql_user = os.getenv("SQL_USER_SOURCE")
     sql_pass = os.getenv("SQL_PASSWORD_SOURCE")
