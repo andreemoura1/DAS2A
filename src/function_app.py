@@ -1,6 +1,7 @@
 import logging
 import azure.functions as func
 
+
 # Ponto de entrada do Function App.
 # Cada trigger é registrado como uma função independente.
 app = func.FunctionApp()

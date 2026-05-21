@@ -1,6 +1,8 @@
 import azure.functions as func
 import logging
 import os
+import pyodbc
+
 #from orchestrators.etl_orchestrator import ETLOrchestrator
 
 app = func.Blueprint()
@@ -16,3 +18,35 @@ def extract_cliente(timer: func.TimerRequest) -> None:
 
     logging.info(f"servidor: {sql_server},  banco: {sql_database}, usuario:{sql_user}, senha: {sql_pass} ...")   
   
+     # Configura a string de conexão para o banco de dados SQL Server
+    conn_str = (
+        "DRIVER={ODBC Driver 18 for SQL Server};"
+        f"SERVER={sql_server};"
+        f"DATABASE={sql_database};"
+        f"UID={sql_user};"
+        f"PWD={sql_pass};"
+        "Encrypt=yes;"
+        "TrustServerCertificate=no;"
+        "Connection Timeout=30;"
+    )
+
+   
+    try:
+        # Estabelece a conexão com o banco de dados usando pyodbc
+        with pyodbc.connect(conn_str) as conn:
+            # Cria um cursor para executar a consulta   
+            cursor = conn.cursor()
+            
+            query = "select top 5 * from erp.titulo_receber"
+
+            # Executa a consulta SQL
+            cursor.execute(query)
+
+            # Busca todos os resultados da consulta
+            rows = cursor.fetchall()
+
+            logging.info(rows)           
+
+    except Exception as e:
+        logging.error(f"Erro ao ler erp.titulo_receber: {str(e)}")
+        raise
