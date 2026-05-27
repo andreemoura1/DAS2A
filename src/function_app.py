@@ -1,9 +1,9 @@
-import logging
+﻿import logging
 import azure.functions as func
 
 
 # Ponto de entrada do Function App.
-# Cada trigger é registrado como uma função independente.
+# Cada trigger e registrado como uma funcao independente.
 app = func.FunctionApp()
 
 # Importa triggers para registrar as functions no app
@@ -14,6 +14,9 @@ from triggers.extract_produto import app as extract_produto
 from triggers.extract_categoria_produto import app as extract_categoria_produto
 from triggers.extract_estoque_movimentacao import app as extract_estoque_movimentacao
 from triggers.extract_regiao import app as extract_regiao
+from triggers.extract_representante import app as extract_representante
+from triggers.extract_titulo_receber import app as extract_titulo_receber
+from triggers.extract_transportadora import app as extract_transportadora
 
 
 # Registrar as azure functions
@@ -24,3 +27,6 @@ app.register_functions(extract_produto)
 app.register_functions(extract_categoria_produto)
 app.register_functions(extract_estoque_movimentacao)
 app.register_functions(extract_regiao)
+app.register_functions(extract_representante)
+app.register_functions(extract_titulo_receber)
+app.register_functions(extract_transportadora)
