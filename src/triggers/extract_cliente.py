@@ -1,42 +1,31 @@
 ﻿import azure.functions as func
 import logging
-import os
-import pyodbc
+from repositories.source_repository import SourceRepository
+from repositories.target_repository import TargetRepository
 
 app = func.Blueprint()
 
 
 @app.timer_trigger(schedule="0 0 6 * * *", arg_name="timer", run_on_startup=False)
 def extract_cliente(timer: func.TimerRequest) -> None:
-
-    sql_server = os.getenv("SQL_SERVER_SOURCE")
-    sql_database = os.getenv("SQL_DATABASE_SOURCE")
-    sql_user = os.getenv("SQL_USER_SOURCE")
-    sql_pass = os.getenv("SQL_PASSWORD_SOURCE")
-
     logging.info("extract_cliente iniciado.")
 
-    conn_str = (
-        "DRIVER={ODBC Driver 18 for SQL Server};"
-        f"SERVER={sql_server};"
-        f"DATABASE={sql_database};"
-        f"UID={sql_user};"
-        f"PWD={sql_pass};"
-        "Encrypt=yes;"
-        "TrustServerCertificate=no;"
-        "Connection Timeout=30;"
-    )
+    source_repo = SourceRepository()
+    target_repo = TargetRepository()
 
     try:
-        with pyodbc.connect(conn_str) as conn:
-            cursor = conn.cursor()
-            query = "SELECT * FROM erp.cliente"
-            cursor.execute(query)
-            rows = cursor.fetchall()
-            logging.info(rows)
+        records = source_repo.fetch_all("SELECT * FROM erp.cliente")
+        logging.info(f"{len(records)} registros encontrados em erp.cliente")
+
+        affected = target_repo.upsert_records(
+            table="erp.cliente",
+            key_column="id_cliente",
+            records=records
+        )
+        logging.info(f"{affected} registros processados no target")
 
     except Exception as e:
-        logging.error(f"Erro ao ler erp.cliente: {str(e)}")
+        logging.error(f"Erro ao processar erp.cliente: {str(e)}")
         raise
 
     logging.info("extract_cliente finalizado.")
