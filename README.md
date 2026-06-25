@@ -30,3 +30,10 @@ Contém os diagramas do modelo C4, utilizados para representar a arquitetura do 
 - **01-context.md**: descreve o sistema no nível de contexto, apresentando os principais atores e sistemas externos e suas interações
 
 - **02-container.md**: detalha os principais containers da plataforma de visualização, incluindo tecnologias utilizadas, responsabilidades e comunicação entre os componentes
+
+
+- **01-Fotodashboard**:
+![alt text](image-1.png)
+
+- **01-arquivopbix**:
+relatoriov1.pbix
